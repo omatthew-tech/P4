@@ -245,6 +245,22 @@ public class AirControlTest extends TestCase {
     }
 
 
+    /**
+     * Intersect queries that extend beyond the world bounds should be rejected.
+     */
+    public void testIntersectRejectsQueriesBeyondWorld() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0x123);
+        WorldDB world = new WorldDB(rnd);
+
+        AirPlane plane = new AirPlane("Edge",
+            900, 900, 900, 50, 50, 50, "Carrier", 1, 1);
+        assertTrue(world.add(plane));
+
+        assertNull(world.intersect(900, 900, 900, 500, 500, 500));
+    }
+
+
     // ----------------------------------------------------------
     /**
      * Collisions report should include overlapping objects that occupy

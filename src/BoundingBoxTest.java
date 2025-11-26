@@ -92,5 +92,16 @@ public class BoundingBoxTest extends TestCase {
         assertNull(box.intersection(far));
         assertFalse(far.containsPoint(box.getX(), box.getY(), box.getZ()));
     }
+
+
+    /**
+     * Points exactly on the minimum boundary are considered inside, while the
+     * maximum boundary is excluded.
+     */
+    public void testContainsPointBoundaryBehavior() {
+        assertTrue(box.containsPoint(box.getX(), box.getY(), box.getZ()));
+        assertFalse(box.containsPoint(box.getX() + box.getXWidth(),
+            box.getY(), box.getZ()));
+    }
 }
 

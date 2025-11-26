@@ -298,9 +298,9 @@ public class Bintree {
                 .append(depth).append("\r\n");
             for (int i = 0; i < objects.size(); i++) {
                 AirObject obj = objects.get(i);
-                if (region.containsPoint(obj.getXorig(), obj.getYorig(),
-                    obj.getZorig())
-                    && obj.getBoundingBox().intersects(query)) {
+                BoundingBox overlap = obj.getBoundingBox().intersection(query);
+                if (overlap != null && region.containsPoint(overlap.getX(),
+                    overlap.getY(), overlap.getZ())) {
                     builder.append(obj.toString()).append("\r\n");
                 }
             }

@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.TreeMap;
 import student.TestCase;
 
 /**
@@ -166,6 +167,29 @@ public class AirObjectSkipListTest extends TestCase {
 
 
     /**
+     * Full traversal should visit every node exactly once and in sorted order.
+     */
+    public void testTraverseVisitsNodesInOrder() {
+        list.insert(balloon("Charlie"));
+        list.insert(balloon("Alpha"));
+        list.insert(balloon("Bravo"));
+
+        final StringBuilder builder = new StringBuilder();
+        list.traverse(new AirObjectSkipList.Visitor() {
+            @Override
+            public void visit(AirObject obj) {
+                if (builder.length() > 0) {
+                    builder.append(",");
+                }
+                builder.append(obj.getName());
+            }
+        });
+
+        assertEquals("Alpha,Bravo,Charlie", builder.toString());
+    }
+
+
+    /**
      * traverseRange should return immediately if start is greater than end.
      */
     public void testTraverseRangeWithInvalidBounds() {
@@ -248,6 +272,86 @@ public class AirObjectSkipListTest extends TestCase {
         assertTrue(tallList.currentLevel() >= 1);
         assertNotNull(tallList.remove("High"));
         assertEquals(0, tallList.currentLevel());
+    }
+
+
+    /**
+     * Randomized operations against a sorted model should keep the skip list in
+     * strict agreement for size, ordering, and search/remove semantics.
+     */
+    public void testRandomizedOperationsMatchModel() {
+        AirObjectSkipList randomList = new AirObjectSkipList(new Random(0xCAFE));
+        TreeMap<String, Balloon> model = new TreeMap<>();
+        Random ops = new Random(0xBEEF);
+
+        for (int i = 0; i < 200; i++) {
+            int op = ops.nextInt(3);
+            String key = "Key" + ops.nextInt(30);
+            switch (op) {
+                case 0: // insert
+                    Balloon entry = balloon(key);
+                    boolean inserted = randomList.insert(entry);
+                    if (model.containsKey(key)) {
+                        assertFalse(inserted);
+                    }
+                    else {
+                        assertTrue(inserted);
+                        model.put(key, entry);
+                    }
+                    break;
+                case 1: // remove
+                    AirObject removed = randomList.remove(key);
+                    Balloon expected = model.remove(key);
+                    if (expected == null) {
+                        assertNull(removed);
+                    }
+                    else {
+                        assertSame(expected, removed);
+                    }
+                    break;
+                default: // search
+                    AirObject found = randomList.search(key);
+                    Balloon wanted = model.get(key);
+                    if (wanted == null) {
+                        assertNull(found);
+                    }
+                    else {
+                        assertSame(wanted, found);
+                    }
+                    break;
+            }
+
+            assertEquals(model.size(), randomList.size());
+            assertEquals(model.isEmpty(), randomList.isEmpty());
+            assertEquals(namesFromModel(model), namesFromList(randomList));
+        }
+    }
+
+
+    private String namesFromModel(TreeMap<String, Balloon> model) {
+        StringBuilder builder = new StringBuilder();
+        for (Balloon value : model.values()) {
+            if (builder.length() > 0) {
+                builder.append(",");
+            }
+            builder.append(value.getName());
+        }
+        return builder.toString();
+    }
+
+
+    private String namesFromList(AirObjectSkipList skiplist) {
+        final StringBuilder builder = new StringBuilder();
+        skiplist.traverse(new AirObjectSkipList.Visitor() {
+            @Override
+            public void visit(AirObject obj) {
+                if (builder.length() > 0) {
+                    builder.append(",");
+                }
+                builder.append(obj.getName());
+            }
+        });
+        return builder.toString();
     }
 }
 

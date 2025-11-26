@@ -225,6 +225,113 @@ public class BintreeTest extends TestCase {
     }
 
 
+    /**
+     * Removing the final object should collapse the entire tree back to the
+     * single flyweight node.
+     */
+    public void testRemoveLastObjectResetsTree() {
+        Bintree tree = new Bintree(world);
+        Balloon single = balloon("Solo");
+        tree.insert(single);
+        assertTrue(tree.remove(single));
+        String listing = tree.print();
+        assertTrue(listing.startsWith("E (0, 0, 0, 64, 64, 64) 0"));
+    }
+
+
+    /**
+     * Removing all children beneath an internal node should also reset that
+     * node to a flyweight.
+     */
+    public void testRemoveAllChildrenPrunesInternalNode() {
+        Bintree tree = new Bintree(world);
+        Balloon left = balloonAt("Left", 1, 1, 1);
+        Balloon right = balloonAt("Right", 40, 1, 1);
+        tree.insert(left);
+        tree.insert(right);
+        assertTrue(tree.remove(left));
+        assertTrue(tree.remove(right));
+        String listing = tree.print();
+        assertTrue(listing.startsWith("E (0, 0, 0, 64, 64, 64) 0"));
+    }
+
+
+    /**
+     * Removing objects so that only three remain at the root should collapse an
+     * internal node back into a single leaf node.
+     */
+    public void testRemoveCollapsesInternalNodeToLeaf() {
+        Bintree tree = new Bintree(world);
+        Balloon a = balloonAt("A", 1, 1, 1);
+        Balloon b = balloonAt("B", 40, 1, 1);
+        Balloon c = balloonAt("C", 1, 40, 1);
+        Balloon d = balloonAt("D", 40, 40, 1);
+        Balloon[] balloons = {a, b, c, d};
+        for (Balloon balloon : balloons) {
+            tree.insert(balloon);
+        }
+        assertTrue(tree.print().startsWith("I (0, 0, 0, 64, 64, 64) 0"));
+
+        assertTrue(tree.remove(d));
+        String listing = tree.print();
+        assertTrue(listing.startsWith("Leaf with 3 objects (0, 0, 0, 64, 64, 64) 0"));
+        assertEquals(0, countOccurrences(listing, "D"));
+    }
+
+
+    /**
+     * Objects that span multiple child regions should only appear once in the
+     * intersection report thanks to the origin-based filtering.
+     */
+    public void testIntersectReportsSpanningObjectOnce() {
+        Bintree tree = new Bintree(world);
+        Balloon span = spanningBalloon("Span");
+        tree.insert(span);
+        tree.insert(balloonAt("B", 40, 1, 1));
+        tree.insert(balloonAt("C", 1, 40, 1));
+        tree.insert(balloonAt("D", 40, 40, 1));
+
+        String report = tree.intersectReport(new BoundingBox(0, 0, 0, 64, 64, 64));
+        assertEquals(1, countOccurrences(report, "Span"));
+    }
+
+
+    /**
+     * Objects whose origins lie outside the queried region should still appear
+     * in the results when the query overlaps a different portion of the object.
+     */
+    public void testIntersectIncludesObjectsWhenQueryMissesOrigin() {
+        Bintree tree = new Bintree(world);
+        tree.insert(balloonAt("A", 1, 1, 1));
+        tree.insert(balloonAt("B", 40, 1, 1));
+        tree.insert(balloonAt("C", 1, 40, 1));
+        tree.insert(balloonAt("D", 40, 40, 1));
+        Balloon span = new Balloon("Span", 0, 0, 0, 60, 4, 4, "hot_air", 5);
+        tree.insert(span);
+
+        BoundingBox query = new BoundingBox(48, 0, 0, 8, 4, 4);
+        String report = tree.intersectReport(query);
+        assertEquals(1, countOccurrences(report, "Span"));
+    }
+
+
+    /**
+     * Collisions between objects that span multiple child regions should be
+     * reported exactly once despite the objects being stored in both children.
+     */
+    public void testCollisionsReportedOnceForSpanningObjects() {
+        Bintree tree = new Bintree(world);
+        Balloon first = new Balloon("SpanA", 31, 1, 1, 40, 4, 4, "hot_air", 5);
+        Balloon second = new Balloon("SpanB", 33, 1, 1, 40, 4, 4, "hot_air", 5);
+        tree.insert(first);
+        tree.insert(second);
+
+        String collisions = tree.collisionsReport();
+        assertEquals(1, countOccurrences(collisions, "SpanA"));
+        assertEquals(1, countOccurrences(collisions, "SpanB"));
+    }
+
+
     private Balloon balloon(String name) {
         return new Balloon(name, 1, 1, 1, 2, 2, 2, "hot_air", 5);
     }
@@ -237,6 +344,11 @@ public class BintreeTest extends TestCase {
 
     private Balloon balloonAt(String name, int x, int y, int z) {
         return new Balloon(name, x, y, z, 4, 4, 4, "hot_air", 5);
+    }
+
+
+    private Balloon spanningBalloon(String name) {
+        return new Balloon(name, 0, 0, 0, 40, 4, 4, "hot_air", 5);
     }
 
 
