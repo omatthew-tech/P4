@@ -1,5 +1,8 @@
 /**
  * Immutable axis-aligned bounding box used by the ATC data structures.
+ * 
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class BoundingBox {
     private final int x;
@@ -25,7 +28,12 @@ public class BoundingBox {
      * @param zSize
      *            width in the z direction
      */
-    public BoundingBox(int xCoord, int yCoord, int zCoord, int xSize, int ySize,
+    public BoundingBox(
+        int xCoord,
+        int yCoord,
+        int zCoord,
+        int xSize,
+        int ySize,
         int zSize) {
         x = xCoord;
         y = yCoord;
@@ -98,11 +106,15 @@ public class BoundingBox {
      *            width in z direction
      * @return true when the boxes overlap with non-zero volume
      */
-    public boolean intersects(int xCoord, int yCoord, int zCoord, int xSize,
-        int ySize, int zSize) {
-        return overlapsOnAxis(x, xWidth, xCoord, xSize)
-            && overlapsOnAxis(y, yWidth, yCoord, ySize)
-            && overlapsOnAxis(z, zWidth, zCoord, zSize);
+    public boolean intersects(
+        int xCoord,
+        int yCoord,
+        int zCoord,
+        int xSize,
+        int ySize,
+        int zSize) {
+        return overlapsOnAxis(x, xWidth, xCoord, xSize) && overlapsOnAxis(y,
+            yWidth, yCoord, ySize) && overlapsOnAxis(z, zWidth, zCoord, zSize);
     }
 
 
@@ -155,11 +167,13 @@ public class BoundingBox {
     }
 
 
-    private boolean overlapsOnAxis(int startA, int widthA, int startB,
+    private boolean overlapsOnAxis(
+        int startA,
+        int widthA,
+        int startB,
         int widthB) {
         int endA = startA + widthA;
         int endB = startB + widthB;
         return startA < endB && startB < endA;
     }
 }
-

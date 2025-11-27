@@ -4,6 +4,9 @@ import student.TestCase;
 /**
  * Stress-style tests that compare the bintree intersect output with a
  * brute-force filter across all stored objects.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class WorldDBIntersectionTest extends TestCase {
 
@@ -25,14 +28,14 @@ public class WorldDBIntersectionTest extends TestCase {
 
         for (int i = 0; i < 30; i++) {
             BoundingBox query = randomBox(rnd);
-            String report = world.intersect(query.getX(), query.getY(),
-                query.getZ(), query.getXWidth(), query.getYWidth(),
-                query.getZWidth());
+            String report = world.intersect(query.getX(), query.getY(), query
+                .getZ(), query.getXWidth(), query.getYWidth(), query
+                    .getZWidth());
             for (int j = 0; j < objects.length; j++) {
                 AirObject obj = objects[j];
-                boolean expected = obj.getBoundingBox().intersects(
-                    query.getX(), query.getY(), query.getZ(),
-                    query.getXWidth(), query.getYWidth(), query.getZWidth());
+                boolean expected = obj.getBoundingBox().intersects(query.getX(),
+                    query.getY(), query.getZ(), query.getXWidth(), query
+                        .getYWidth(), query.getZWidth());
                 boolean actual = report.contains(obj.toString());
                 assertEquals("Mismatch for " + obj + " in query " + query
                     .format(), expected, actual);
@@ -62,4 +65,3 @@ public class WorldDBIntersectionTest extends TestCase {
         return new BoundingBox(x, y, z, xw, yw, zw);
     }
 }
-

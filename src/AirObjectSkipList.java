@@ -1,7 +1,16 @@
 import java.util.Random;
 
 /**
+ * Skip list implementation for AirObject instances.
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
+ */
+
+/**
  * Skip list specialized for AirObject instances keyed by name.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class AirObjectSkipList {
     private static final int MAX_LEVEL = 32;
@@ -29,7 +38,6 @@ public class AirObjectSkipList {
             return value == null ? null : value.getName();
         }
     }
-
 
     /**
      * Constructs a skip list using the provided random number generator.
@@ -268,7 +276,6 @@ public class AirObjectSkipList {
         return lvl;
     }
 
-
     /**
      * Simple visitor interface to avoid using java.util collections.
      */
@@ -282,4 +289,3 @@ public class AirObjectSkipList {
         void visit(AirObject obj);
     }
 }
-

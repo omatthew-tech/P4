@@ -2,10 +2,12 @@ import student.TestCase;
 
 /**
  * Tests for the {@link Bintree#splitRegionForTest(BoundingBox, int)} helper.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class BintreeTest extends TestCase {
     private BoundingBox world;
-
 
     /**
      * Common setup for tests that need a world-sized region.
@@ -111,7 +113,7 @@ public class BintreeTest extends TestCase {
         Balloon c = balloon("C");
         Balloon d = balloon("D");
         Balloon e = balloon("E");
-        Balloon[] all = {a, b, c, d, e};
+        Balloon[] all = { a, b, c, d, e };
         for (Balloon balloon : all) {
             tree.insert(balloon);
         }
@@ -136,18 +138,19 @@ public class BintreeTest extends TestCase {
      */
     public void testLeafStorageExpandsCapacityAndSorts() {
         Bintree tiny = new Bintree(new BoundingBox(0, 0, 0, 1, 1, 1));
-        String[] names = {"Zulu", "Yankee", "Xray", "Whiskey", "Victor",
-            "Uniform"};
+        String[] names = { "Zulu", "Yankee", "Xray", "Whiskey", "Victor",
+            "Uniform" };
         for (String name : names) {
             tiny.insert(narrowBalloon(name));
         }
         String listing = tiny.print();
-        assertTrue(listing.contains("Leaf with 6 objects (0, 0, 0, 1, 1, 1) 0"));
-        String[] expectedOrder = {"Uniform", "Victor", "Whiskey", "Xray",
-            "Yankee", "Zulu"};
+        assertTrue(listing.contains(
+            "Leaf with 6 objects (0, 0, 0, 1, 1, 1) 0"));
+        String[] expectedOrder = { "Uniform", "Victor", "Whiskey", "Xray",
+            "Yankee", "Zulu" };
         for (int i = 0; i < expectedOrder.length - 1; i++) {
-            assertTrue(indexOfName(listing, expectedOrder[i])
-                < indexOfName(listing, expectedOrder[i + 1]));
+            assertTrue(indexOfName(listing, expectedOrder[i]) < indexOfName(
+                listing, expectedOrder[i + 1]));
         }
     }
 
@@ -185,8 +188,8 @@ public class BintreeTest extends TestCase {
         assertEquals(0, Bintree.compareAirObjectsForTest(null, null));
         assertTrue(Bintree.compareAirObjectsForTest(null, alpha) < 0);
         assertTrue(Bintree.compareAirObjectsForTest(alpha, null) > 0);
-        assertEquals(0,
-            Bintree.compareAirObjectsForTest(nullNamed, nullNamed2));
+        assertEquals(0, Bintree.compareAirObjectsForTest(nullNamed,
+            nullNamed2));
         assertTrue(Bintree.compareAirObjectsForTest(nullNamed, alpha) < 0);
         assertTrue(Bintree.compareAirObjectsForTest(alpha, nullNamed) > 0);
         assertTrue(Bintree.compareAirObjectsForTest(alpha, bravo) < 0);
@@ -221,7 +224,8 @@ public class BintreeTest extends TestCase {
             tree.insert(balloonAt("Overlap" + i, 5, 5, 5));
         }
         String listing = tree.print();
-        assertTrue(listing.startsWith("Leaf with 4 objects (0, 0, 0, 64, 64, 64) 0"));
+        assertTrue(listing.startsWith(
+            "Leaf with 4 objects (0, 0, 0, 64, 64, 64) 0"));
     }
 
 
@@ -266,7 +270,7 @@ public class BintreeTest extends TestCase {
         Balloon b = balloonAt("B", 40, 1, 1);
         Balloon c = balloonAt("C", 1, 40, 1);
         Balloon d = balloonAt("D", 40, 40, 1);
-        Balloon[] balloons = {a, b, c, d};
+        Balloon[] balloons = { a, b, c, d };
         for (Balloon balloon : balloons) {
             tree.insert(balloon);
         }
@@ -274,7 +278,8 @@ public class BintreeTest extends TestCase {
 
         assertTrue(tree.remove(d));
         String listing = tree.print();
-        assertTrue(listing.startsWith("Leaf with 3 objects (0, 0, 0, 64, 64, 64) 0"));
+        assertTrue(listing.startsWith(
+            "Leaf with 3 objects (0, 0, 0, 64, 64, 64) 0"));
         assertEquals(0, countOccurrences(listing, "D"));
     }
 
@@ -291,7 +296,8 @@ public class BintreeTest extends TestCase {
         tree.insert(balloonAt("C", 1, 40, 1));
         tree.insert(balloonAt("D", 40, 40, 1));
 
-        String report = tree.intersectReport(new BoundingBox(0, 0, 0, 64, 64, 64));
+        String report = tree.intersectReport(new BoundingBox(0, 0, 0, 64, 64,
+            64));
         assertEquals(1, countOccurrences(report, "Span"));
     }
 
@@ -329,6 +335,67 @@ public class BintreeTest extends TestCase {
         String collisions = tree.collisionsReport();
         assertEquals(1, countOccurrences(collisions, "SpanA"));
         assertEquals(1, countOccurrences(collisions, "SpanB"));
+    }
+
+
+    /**
+     * The AirObjectStorage copy helper used for testing should merge two
+     * storages without duplicating references and maintain sorted order.
+     */
+    public void testMergeStorageForTestDeduplicatesAndSorts() {
+        Balloon alpha = balloon("Alpha");
+        Balloon beta = balloon("Beta");
+        Balloon gamma = balloon("Gamma");
+        AirObject[] initial = { gamma, alpha };
+        AirObject[] extra = { alpha, beta };
+
+        AirObject[] merged = Bintree.mergeStorageForTest(initial, extra);
+        assertEquals(3, merged.length);
+        assertSame(alpha, merged[0]);
+        assertSame(beta, merged[1]);
+        assertSame(gamma, merged[2]);
+    }
+
+
+    /**
+     * Verifies that the storage helper expands capacity multiple times when the
+     * requested size is much larger than the default backing array.
+     */
+    public void testEnsureCapacityForTestGrowsExponentially() {
+        int capacitySmall = Bintree.ensureCapacityForTest(5);
+        assertTrue(capacitySmall >= 5);
+
+        int capacityLarge = Bintree.ensureCapacityForTest(64);
+        assertTrue(capacityLarge >= 64);
+        assertTrue(capacityLarge > capacitySmall);
+    }
+
+
+    /**
+     * Removing a spanning object should visit both children of an internal node
+     * and return true when the object existed.
+     */
+    public void testRemoveSpanningObjectVisitsBothChildren() {
+        Bintree tree = new Bintree(world);
+        tree.insert(balloonAt("A", 1, 1, 1));
+        tree.insert(balloonAt("B", 40, 1, 1));
+        tree.insert(balloonAt("C", 1, 40, 1));
+        tree.insert(balloonAt("D", 40, 40, 1));
+        Balloon span = new Balloon("Span", 1, 1, 1, 40, 40, 4, "hot_air", 5);
+        tree.insert(span);
+
+        assertTrue(tree.remove(span));
+        assertEquals(0, countOccurrences(tree.print(), "Span"));
+    }
+
+
+    /**
+     * When both children become empty during removal, the internal node should
+     * collapse directly to the flyweight instance.
+     */
+    public void testInternalRemovalReturnsFlyweightWhenChildrenEmpty() {
+        Balloon span = new Balloon("Span", 0, 0, 0, 64, 64, 64, "hot_air", 5);
+        assertTrue(Bintree.removeSpanningObjectReturnsFlyweightForTest(span));
     }
 
 
@@ -371,4 +438,3 @@ public class BintreeTest extends TestCase {
     }
 
 }
-

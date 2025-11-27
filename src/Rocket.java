@@ -1,5 +1,8 @@
 /**
  * Rocket object.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class Rocket extends AirObject {
     private final int ascentRate;
@@ -27,8 +30,16 @@ public class Rocket extends AirObject {
      * @param traj
      *            trajectory
      */
-    public Rocket(String name, int x, int y, int z, int xWidth, int yWidth,
-        int zWidth, int rate, double traj) {
+    public Rocket(
+        String name,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth,
+        int rate,
+        double traj) {
         super(name, x, y, z, xWidth, yWidth, zWidth);
         ascentRate = rate;
         trajectory = traj;
@@ -56,4 +67,3 @@ public class Rocket extends AirObject {
         return "Rocket";
     }
 }
-

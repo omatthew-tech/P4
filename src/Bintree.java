@@ -1,6 +1,9 @@
 /**
  * Three-dimensional Bintree that stores AirObjects using alternating
  * orthogonal splits (x, y, z).
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class Bintree {
     private final BoundingBox worldBounds;
@@ -29,7 +32,6 @@ public class Bintree {
             value = true;
         }
     }
-
 
     /**
      * Constructs a new Bintree bounded by the provided world box.
@@ -117,9 +119,9 @@ public class Bintree {
         StringBuilder builder = new StringBuilder();
         builder.append("The following objects intersect (").append(query.getX())
             .append(" ").append(query.getY()).append(" ").append(query.getZ())
-            .append(" ").append(query.getXWidth()).append(" ")
-            .append(query.getYWidth()).append(" ")
-            .append(query.getZWidth()).append("):\r\n");
+            .append(" ").append(query.getXWidth()).append(" ").append(query
+                .getYWidth()).append(" ").append(query.getZWidth()).append(
+                    "):\r\n");
         Counter counter = new Counter();
         if (root == flyweight) {
             counter.increment();
@@ -132,7 +134,6 @@ public class Bintree {
         return builder.toString();
     }
 
-
     /**
      * Bintree node interface.
      */
@@ -140,20 +141,32 @@ public class Bintree {
         BintreeNode insert(AirObject obj, BoundingBox region, int depth);
 
 
-        BintreeNode remove(AirObject obj, BoundingBox region, int depth,
+        BintreeNode remove(
+            AirObject obj,
+            BoundingBox region,
+            int depth,
             BooleanBox removed);
 
 
-        void print(StringBuilder builder, int depth, BoundingBox region,
+        void print(
+            StringBuilder builder,
+            int depth,
+            BoundingBox region,
             Counter counter);
 
 
-        void collectCollisions(StringBuilder builder, BoundingBox region,
+        void collectCollisions(
+            StringBuilder builder,
+            BoundingBox region,
             int depth);
 
 
-        void intersect(BoundingBox query, BoundingBox region, int depth,
-            StringBuilder builder, Counter counter);
+        void intersect(
+            BoundingBox query,
+            BoundingBox region,
+            int depth,
+            StringBuilder builder,
+            Counter counter);
 
 
         boolean isFlyweight();
@@ -165,7 +178,9 @@ public class Bintree {
      */
     private class FlyweightNode implements BintreeNode {
         @Override
-        public BintreeNode insert(AirObject obj, BoundingBox region,
+        public BintreeNode insert(
+            AirObject obj,
+            BoundingBox region,
             int depth) {
             LeafNode leaf = new LeafNode();
             leaf.add(obj);
@@ -174,32 +189,44 @@ public class Bintree {
 
 
         @Override
-        public BintreeNode remove(AirObject obj, BoundingBox region,
-            int depth, BooleanBox removed) {
+        public BintreeNode remove(
+            AirObject obj,
+            BoundingBox region,
+            int depth,
+            BooleanBox removed) {
             return this;
         }
 
 
         @Override
-        public void print(StringBuilder builder, int depth, BoundingBox region,
+        public void print(
+            StringBuilder builder,
+            int depth,
+            BoundingBox region,
             Counter counter) {
             appendIndent(builder, depth);
-            builder.append("E ").append(region.format()).append(" ")
-                .append(depth).append("\r\n");
+            builder.append("E ").append(region.format()).append(" ").append(
+                depth).append("\r\n");
             counter.increment();
         }
 
 
         @Override
-        public void collectCollisions(StringBuilder builder,
-            BoundingBox region, int depth) {
+        public void collectCollisions(
+            StringBuilder builder,
+            BoundingBox region,
+            int depth) {
             // Nothing to report
         }
 
 
         @Override
-        public void intersect(BoundingBox query, BoundingBox region, int depth,
-            StringBuilder builder, Counter counter) {
+        public void intersect(
+            BoundingBox query,
+            BoundingBox region,
+            int depth,
+            StringBuilder builder,
+            Counter counter) {
             // flyweight nodes are not visited
         }
 
@@ -228,7 +255,9 @@ public class Bintree {
 
 
         @Override
-        public BintreeNode insert(AirObject obj, BoundingBox region,
+        public BintreeNode insert(
+            AirObject obj,
+            BoundingBox region,
             int depth) {
             objects.add(obj);
             if (shouldSplit(region, depth)) {
@@ -239,8 +268,11 @@ public class Bintree {
 
 
         @Override
-        public BintreeNode remove(AirObject obj, BoundingBox region,
-            int depth, BooleanBox removed) {
+        public BintreeNode remove(
+            AirObject obj,
+            BoundingBox region,
+            int depth,
+            BooleanBox removed) {
             if (objects.remove(obj)) {
                 removed.set();
             }
@@ -252,24 +284,29 @@ public class Bintree {
 
 
         @Override
-        public void print(StringBuilder builder, int depth, BoundingBox region,
+        public void print(
+            StringBuilder builder,
+            int depth,
+            BoundingBox region,
             Counter counter) {
             appendIndent(builder, depth);
-            builder.append("Leaf with ").append(objects.size())
-                .append(" objects ").append(region.format()).append(" ")
-                .append(depth).append("\r\n");
+            builder.append("Leaf with ").append(objects.size()).append(
+                " objects ").append(region.format()).append(" ").append(depth)
+                .append("\r\n");
             for (int i = 0; i < objects.size(); i++) {
                 appendIndent(builder, depth + 1);
-                builder.append("(").append(objects.get(i).toString())
-                    .append(")\r\n");
+                builder.append("(").append(objects.get(i).toString()).append(
+                    ")\r\n");
             }
             counter.increment();
         }
 
 
         @Override
-        public void collectCollisions(StringBuilder builder,
-            BoundingBox region, int depth) {
+        public void collectCollisions(
+            StringBuilder builder,
+            BoundingBox region,
+            int depth) {
             builder.append("In leaf node ").append(region.format()).append(" ")
                 .append(depth).append("\r\n");
             int limit = objects.size();
@@ -279,11 +316,11 @@ public class Bintree {
                     BoundingBox second = objects.get(j).getBoundingBox();
                     BoundingBox intersection = first.intersection(second);
                     if (intersection != null && region.containsPoint(
-                        intersection.getX(), intersection.getY(),
-                        intersection.getZ())) {
+                        intersection.getX(), intersection.getY(), intersection
+                            .getZ())) {
                         builder.append("(").append(objects.get(i).toString())
-                            .append(") and (")
-                            .append(objects.get(j).toString()).append(")\r\n");
+                            .append(") and (").append(objects.get(j).toString())
+                            .append(")\r\n");
                     }
                 }
             }
@@ -291,8 +328,12 @@ public class Bintree {
 
 
         @Override
-        public void intersect(BoundingBox query, BoundingBox region, int depth,
-            StringBuilder builder, Counter counter) {
+        public void intersect(
+            BoundingBox query,
+            BoundingBox region,
+            int depth,
+            StringBuilder builder,
+            Counter counter) {
             counter.increment();
             builder.append("In leaf node ").append(region.format()).append(" ")
                 .append(depth).append("\r\n");
@@ -321,7 +362,8 @@ public class Bintree {
                 return false;
             }
             int axis = depth % 3;
-            int axisWidth = axis == 0 ? region.getXWidth()
+            int axisWidth = axis == 0
+                ? region.getXWidth()
                 : axis == 1 ? region.getYWidth() : region.getZWidth();
             return axisWidth > 1;
         }
@@ -333,8 +375,8 @@ public class Bintree {
             }
             BoundingBox intersection = objects.get(0).getBoundingBox();
             for (int i = 1; i < objects.size(); i++) {
-                intersection = intersection
-                    .intersection(objects.get(i).getBoundingBox());
+                intersection = intersection.intersection(objects.get(i)
+                    .getBoundingBox());
                 if (intersection == null) {
                     return false;
                 }
@@ -375,7 +417,9 @@ public class Bintree {
 
 
         @Override
-        public BintreeNode insert(AirObject obj, BoundingBox region,
+        public BintreeNode insert(
+            AirObject obj,
+            BoundingBox region,
             int depth) {
             BoundingBox[] children = splitRegion(region, axis);
             if (children[0].intersects(obj.getBoundingBox())) {
@@ -389,8 +433,11 @@ public class Bintree {
 
 
         @Override
-        public BintreeNode remove(AirObject obj, BoundingBox region,
-            int depth, BooleanBox removed) {
+        public BintreeNode remove(
+            AirObject obj,
+            BoundingBox region,
+            int depth,
+            BooleanBox removed) {
             BoundingBox[] children = splitRegion(region, axis);
             if (children[0].intersects(obj.getBoundingBox())) {
                 left = left.remove(obj, children[0], depth + 1, removed);
@@ -419,11 +466,14 @@ public class Bintree {
 
 
         @Override
-        public void print(StringBuilder builder, int depth,
-            BoundingBox region, Counter counter) {
+        public void print(
+            StringBuilder builder,
+            int depth,
+            BoundingBox region,
+            Counter counter) {
             appendIndent(builder, depth);
-            builder.append("I ").append(region.format()).append(" ")
-                .append(depth).append("\r\n");
+            builder.append("I ").append(region.format()).append(" ").append(
+                depth).append("\r\n");
             counter.increment();
             BoundingBox[] children = splitRegion(region, axis);
             left.print(builder, depth + 1, children[0], counter);
@@ -432,8 +482,10 @@ public class Bintree {
 
 
         @Override
-        public void collectCollisions(StringBuilder builder,
-            BoundingBox region, int depth) {
+        public void collectCollisions(
+            StringBuilder builder,
+            BoundingBox region,
+            int depth) {
             BoundingBox[] children = splitRegion(region, axis);
             left.collectCollisions(builder, children[0], depth + 1);
             right.collectCollisions(builder, children[1], depth + 1);
@@ -441,15 +493,18 @@ public class Bintree {
 
 
         @Override
-        public void intersect(BoundingBox query, BoundingBox region, int depth,
-            StringBuilder builder, Counter counter) {
+        public void intersect(
+            BoundingBox query,
+            BoundingBox region,
+            int depth,
+            StringBuilder builder,
+            Counter counter) {
             counter.increment();
             builder.append("In Internal node ").append(region.format()).append(
                 " ").append(depth).append("\r\n");
             BoundingBox[] children = splitRegion(region, axis);
             if (children[0].intersects(query)) {
-                left.intersect(query, children[0], depth + 1, builder,
-                    counter);
+                left.intersect(query, children[0], depth + 1, builder, counter);
             }
             if (children[1].intersects(query)) {
                 right.intersect(query, children[1], depth + 1, builder,
@@ -464,8 +519,7 @@ public class Bintree {
         }
 
 
-        private void gatherObjects(BintreeNode node,
-            AirObjectStorage storage) {
+        private void gatherObjects(BintreeNode node, AirObjectStorage storage) {
             if (node.isFlyweight()) {
                 return;
             }
@@ -613,7 +667,6 @@ public class Bintree {
         }
     }
 
-
     static BoundingBox[] splitRegionForTest(BoundingBox region, int axis) {
         return splitRegion(region, axis);
     }
@@ -625,6 +678,45 @@ public class Bintree {
     }
 
 
+    static AirObject[] mergeStorageForTest(
+        AirObject[] initial,
+        AirObject[] extra) {
+        AirObjectStorage target = new AirObjectStorage();
+        for (int i = 0; i < initial.length; i++) {
+            target.add(initial[i]);
+        }
+        AirObjectStorage source = new AirObjectStorage();
+        for (int i = 0; i < extra.length; i++) {
+            source.add(extra[i]);
+        }
+        target.copyFrom(source);
+        return target.toArray();
+    }
+
+
+    static int ensureCapacityForTest(int required) {
+        AirObjectStorage storage = new AirObjectStorage();
+        storage.ensureCapacity(required);
+        return storage.data.length;
+    }
+
+
+    static boolean removeSpanningObjectReturnsFlyweightForTest(AirObject obj) {
+        BoundingBox region = new BoundingBox(0, 0, 0, 64, 64, 64);
+        Bintree tree = new Bintree(region);
+        InternalNode node = tree.new InternalNode(0);
+        LeafNode leftLeaf = tree.new LeafNode();
+        leftLeaf.add(obj);
+        LeafNode rightLeaf = tree.new LeafNode();
+        rightLeaf.add(obj);
+        node.left = leftLeaf;
+        node.right = rightLeaf;
+        BooleanBox removed = new BooleanBox();
+        BintreeNode result = node.remove(obj, region, 0, removed);
+        return result == tree.flyweight;
+    }
+
+
     private static BoundingBox[] splitRegion(BoundingBox region, int axis) {
         BoundingBox[] children = new BoundingBox[2];
         if (axis == 0) {
@@ -633,11 +725,11 @@ public class Bintree {
                 half = 1;
             }
             int remainder = region.getXWidth() - half;
-            children[0] = new BoundingBox(region.getX(), region.getY(),
-                region.getZ(), half, region.getYWidth(), region.getZWidth());
+            children[0] = new BoundingBox(region.getX(), region.getY(), region
+                .getZ(), half, region.getYWidth(), region.getZWidth());
             children[1] = new BoundingBox(region.getX() + half, region.getY(),
-                region.getZ(), remainder, region.getYWidth(),
-                region.getZWidth());
+                region.getZ(), remainder, region.getYWidth(), region
+                    .getZWidth());
         }
         else if (axis == 1) {
             int half = region.getYWidth() / 2;
@@ -645,11 +737,11 @@ public class Bintree {
                 half = 1;
             }
             int remainder = region.getYWidth() - half;
-            children[0] = new BoundingBox(region.getX(), region.getY(),
-                region.getZ(), region.getXWidth(), half, region.getZWidth());
-            children[1] = new BoundingBox(region.getX(),
-                region.getY() + half, region.getZ(), region.getXWidth(),
-                remainder, region.getZWidth());
+            children[0] = new BoundingBox(region.getX(), region.getY(), region
+                .getZ(), region.getXWidth(), half, region.getZWidth());
+            children[1] = new BoundingBox(region.getX(), region.getY() + half,
+                region.getZ(), region.getXWidth(), remainder, region
+                    .getZWidth());
         }
         else {
             int half = region.getZWidth() / 2;
@@ -657,10 +749,10 @@ public class Bintree {
                 half = 1;
             }
             int remainder = region.getZWidth() - half;
-            children[0] = new BoundingBox(region.getX(), region.getY(),
-                region.getZ(), region.getXWidth(), region.getYWidth(), half);
-            children[1] = new BoundingBox(region.getX(), region.getY(),
-                region.getZ() + half, region.getXWidth(), region.getYWidth(),
+            children[0] = new BoundingBox(region.getX(), region.getY(), region
+                .getZ(), region.getXWidth(), region.getYWidth(), half);
+            children[1] = new BoundingBox(region.getX(), region.getY(), region
+                .getZ() + half, region.getXWidth(), region.getYWidth(),
                 remainder);
         }
         return children;
@@ -673,4 +765,3 @@ public class Bintree {
         }
     }
 }
-

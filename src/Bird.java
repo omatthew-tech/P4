@@ -1,5 +1,8 @@
 /**
  * Bird object.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class Bird extends AirObject {
     private final String species;
@@ -27,8 +30,16 @@ public class Bird extends AirObject {
      * @param count
      *            number of birds
      */
-    public Bird(String name, int x, int y, int z, int xWidth, int yWidth,
-        int zWidth, String birdSpecies, int count) {
+    public Bird(
+        String name,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth,
+        String birdSpecies,
+        int count) {
         super(name, x, y, z, xWidth, yWidth, zWidth);
         species = birdSpecies;
         number = count;
@@ -56,4 +67,3 @@ public class Bird extends AirObject {
         return "Bird";
     }
 }
-

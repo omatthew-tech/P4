@@ -1,5 +1,8 @@
 /**
  * Airplane object.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class AirPlane extends AirObject {
     private final String carrier;
@@ -30,8 +33,17 @@ public class AirPlane extends AirObject {
      * @param engines
      *            engine count
      */
-    public AirPlane(String name, int x, int y, int z, int xWidth, int yWidth,
-        int zWidth, String carrierName, int flightNum, int engines) {
+    public AirPlane(
+        String name,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth,
+        String carrierName,
+        int flightNum,
+        int engines) {
         super(name, x, y, z, xWidth, yWidth, zWidth);
         carrier = carrierName;
         flightNumber = flightNum;
@@ -66,4 +78,3 @@ public class AirPlane extends AirObject {
         return "Airplane";
     }
 }
-

@@ -2,6 +2,8 @@ import student.TestCase;
 
 /**
  * Tests for the {@link AirObject} comparison helpers.
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class AirObjectTest extends TestCase {
     private Balloon alpha;
@@ -46,4 +48,3 @@ public class AirObjectTest extends TestCase {
         assertEquals(0, betaWithNullName.compareTo(betaWithNullName));
     }
 }
-

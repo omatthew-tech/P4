@@ -3,8 +3,8 @@ import java.util.Random;
 /**
  * The world for this project. We have a Skip List and a Bintree
  *
- * @author {Your Name Here}
- * @version {Put Something Here}
+ * @author Matthew Ozoroski
+ * @version 2025-11-26
  */
 public class WorldDB implements ATC {
     private static final int WORLD_SIZE = 1024;
@@ -14,14 +14,16 @@ public class WorldDB implements ATC {
 
     /**
      * Create a brave new World.
-     * @param r A random number generator to use
+     * 
+     * @param r
+     *            A random number generator to use
      *
      */
     public WorldDB(Random r) {
         rnd = r == null ? new Random() : r;
         skiplist = new AirObjectSkipList(rnd);
-        bintree = new Bintree(
-            new BoundingBox(0, 0, 0, WORLD_SIZE, WORLD_SIZE, WORLD_SIZE));
+        bintree = new Bintree(new BoundingBox(0, 0, 0, WORLD_SIZE, WORLD_SIZE,
+            WORLD_SIZE));
         clear();
     }
 
@@ -39,7 +41,9 @@ public class WorldDB implements ATC {
     // ----------------------------------------------------------
     /**
      * (Try to) insert an AirObject into the database
-     * @param a An AirObject.
+     * 
+     * @param a
+     *            An AirObject.
      * @return True iff the AirObject is successfully entered into the database
      */
     public boolean add(AirObject a) {
@@ -59,7 +63,9 @@ public class WorldDB implements ATC {
      * The AirObject with this name is deleted from the database (if it exists).
      * Print the AirObject's toString value if one with that name exists.
      * If no such AirObject with this name exists, return null.
-     * @param name AirObject name.
+     * 
+     * @param name
+     *            AirObject name.
      * @return A string representing the AirObject, or null if no such name.
      */
     public String delete(String name) {
@@ -79,6 +85,7 @@ public class WorldDB implements ATC {
     /**
      * Return a listing of the Skiplist in alphabetical order on the names.
      * See the sample test cases for details on format.
+     * 
      * @return String listing the AirObjects in the Skiplist as specified.
      */
     public String printskiplist() {
@@ -90,6 +97,7 @@ public class WorldDB implements ATC {
     /**
      * Return a listing of the Bintree nodes in preorder.
      * See the sample test cases for details on format.
+     * 
      * @return String listing the Bintree nodes as specified.
      */
     public String printbintree() {
@@ -97,11 +105,12 @@ public class WorldDB implements ATC {
     }
 
 
-
     // ----------------------------------------------------------
     /**
      * Print an AirObject with a given name if it exists
-     * @param name The name of the AirObject to print
+     * 
+     * @param name
+     *            The name of the AirObject to print
      * @return String showing the toString for the AirObject if it exists
      *         Return null if there is no such name
      */
@@ -119,8 +128,11 @@ public class WorldDB implements ATC {
      * Return a listing of the AirObjects found in the database between the
      * min and max values for names.
      * See the sample test cases for details on format.
-     * @param start Minimum of range
-     * @param end Maximum of range
+     * 
+     * @param start
+     *            Minimum of range
+     * @param end
+     *            Maximum of range
      * @return String listing the AirObjects in the range as specified.
      *         Null if the parameters are bad
      */
@@ -151,6 +163,7 @@ public class WorldDB implements ATC {
      * See the sample test cases for details on format.
      * Note that the collision is only reported for the node that contains the
      * origin of the intersection box.
+     * 
      * @return String listing the AirObjects that participate in collisions.
      */
     public String collisions() {
@@ -165,12 +178,19 @@ public class WorldDB implements ATC {
      * Note that the collision is only reported for the node that contains the
      * origin of the intersection box.
      * See the sample test cases for details on format.
-     * @param x Bounding box upper left x
-     * @param y Bounding box upper left y
-     * @param z Bounding box upper left z
-     * @param xwid Bounding box x width
-     * @param ywid Bounding box y width
-     * @param zwid Bounding box z width
+     * 
+     * @param x
+     *            Bounding box upper left x
+     * @param y
+     *            Bounding box upper left y
+     * @param z
+     *            Bounding box upper left z
+     * @param xwid
+     *            Bounding box x width
+     * @param ywid
+     *            Bounding box y width
+     * @param zwid
+     *            Bounding box z width
      * @return String listing the AirObjects that intersect the given box.
      *         Return null if any input parameters are bad
      */
@@ -195,13 +215,13 @@ public class WorldDB implements ATC {
         }
         if (obj instanceof AirPlane) {
             AirPlane plane = (AirPlane)obj;
-            return isValidName(plane.getCarrier())
-                && plane.getFlightNumber() > 0 && plane.getEngineCount() > 0;
+            return isValidName(plane.getCarrier()) && plane
+                .getFlightNumber() > 0 && plane.getEngineCount() > 0;
         }
         if (obj instanceof Balloon) {
             Balloon balloon = (Balloon)obj;
-            return isValidName(balloon.getType())
-                && balloon.getAscentRate() > 0;
+            return isValidName(balloon.getType()) && balloon
+                .getAscentRate() > 0;
         }
         if (obj instanceof Bird) {
             Bird bird = (Bird)obj;
@@ -209,8 +229,7 @@ public class WorldDB implements ATC {
         }
         if (obj instanceof Drone) {
             Drone drone = (Drone)obj;
-            return isValidName(drone.getBrand())
-                && drone.getEngineCount() > 0;
+            return isValidName(drone.getBrand()) && drone.getEngineCount() > 0;
         }
         if (obj instanceof Rocket) {
             Rocket rocket = (Rocket)obj;

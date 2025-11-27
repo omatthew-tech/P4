@@ -1,5 +1,8 @@
 /**
  * Balloon object.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class Balloon extends AirObject {
     private final String type;
@@ -27,8 +30,16 @@ public class Balloon extends AirObject {
      * @param rate
      *            ascent rate
      */
-    public Balloon(String name, int x, int y, int z, int xWidth, int yWidth,
-        int zWidth, String balloonType, int rate) {
+    public Balloon(
+        String name,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth,
+        String balloonType,
+        int rate) {
         super(name, x, y, z, xWidth, yWidth, zWidth);
         type = balloonType;
         ascentRate = rate;
@@ -56,4 +67,3 @@ public class Balloon extends AirObject {
         return "Balloon";
     }
 }
-

@@ -1,5 +1,8 @@
 /**
  * Base class for all AirObjects tracked by the ATC system.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public abstract class AirObject implements Comparable<AirObject> {
     private final String name;
@@ -23,8 +26,14 @@ public abstract class AirObject implements Comparable<AirObject> {
      * @param zWidth
      *            width in z dimension
      */
-    protected AirObject(String objectName, int x, int y, int z, int xWidth,
-        int yWidth, int zWidth) {
+    protected AirObject(
+        String objectName,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth) {
         name = objectName;
         box = new BoundingBox(x, y, z, xWidth, yWidth, zWidth);
     }
@@ -104,9 +113,9 @@ public abstract class AirObject implements Comparable<AirObject> {
      * @return formatted prefix shared among all subclasses
      */
     protected String baseInfo() {
-        return typePrefix() + " " + name + " " + box.getX() + " "
-            + box.getY() + " " + box.getZ() + " " + box.getXWidth() + " "
-            + box.getYWidth() + " " + box.getZWidth();
+        return typePrefix() + " " + name + " " + box.getX() + " " + box.getY()
+            + " " + box.getZ() + " " + box.getXWidth() + " " + box.getYWidth()
+            + " " + box.getZWidth();
     }
 
 
@@ -124,4 +133,3 @@ public abstract class AirObject implements Comparable<AirObject> {
         return name.compareTo(other.name);
     }
 }
-

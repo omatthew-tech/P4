@@ -4,6 +4,9 @@ import student.TestCase;
 
 /**
  * Unit tests for {@link AirObjectSkipList}.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class AirObjectSkipListTest extends TestCase {
     private AirObjectSkipList list;
@@ -26,7 +29,6 @@ public class AirObjectSkipListTest extends TestCase {
     private Balloon balloon(String name) {
         return new Balloon(name, 1, 2, 3, 4, 5, 6, "hot", 10);
     }
-
 
     /**
      * Deterministic random generator for forcing skip list levels.
@@ -56,7 +58,6 @@ public class AirObjectSkipListTest extends TestCase {
         }
     }
 
-
     /**
      * Search should find objects that exist in the skip list.
      */
@@ -80,7 +81,8 @@ public class AirObjectSkipListTest extends TestCase {
         assertFalse(list.insert(balloon("Dup")));
         assertEquals(1, list.size());
         assertFalse(list.insert(null));
-        assertFalse(list.insert(new Balloon(null, 1, 1, 1, 1, 1, 1, "type", 5)));
+        assertFalse(list.insert(new Balloon(null, 1, 1, 1, 1, 1, 1, "type",
+            5)));
     }
 
 
@@ -128,7 +130,7 @@ public class AirObjectSkipListTest extends TestCase {
      */
     public void testTraverseRangeIgnoresNullParameters() {
         list.insert(balloon("Alpha"));
-        final int[] visits = {0};
+        final int[] visits = { 0 };
         list.traverseRange(null, "z", new AirObjectSkipList.Visitor() {
             @Override
             public void visit(AirObject obj) {
@@ -146,7 +148,8 @@ public class AirObjectSkipListTest extends TestCase {
 
 
     /**
-     * traverseRange should include both boundary keys and return items in order.
+     * traverseRange should include both boundary keys and return items in
+     * order.
      */
     public void testTraverseRangeInclusiveBounds() {
         list.insert(balloon("Alpha"));
@@ -194,7 +197,7 @@ public class AirObjectSkipListTest extends TestCase {
      */
     public void testTraverseRangeWithInvalidBounds() {
         list.insert(balloon("Alpha"));
-        final int[] visits = {0};
+        final int[] visits = { 0 };
         list.traverseRange("z", "a", new AirObjectSkipList.Visitor() {
             @Override
             public void visit(AirObject obj) {
@@ -210,8 +213,8 @@ public class AirObjectSkipListTest extends TestCase {
      * longer locates the deleted entry.
      */
     public void testRemoveMultiLevelNodeFullyDeletes() {
-        AirObjectSkipList tallList = new AirObjectSkipList(
-            new FixedRandom(0, 0, 1, 1, 1));
+        AirObjectSkipList tallList = new AirObjectSkipList(new FixedRandom(0, 0,
+            1, 1, 1));
         Balloon high = balloon("High");
         Balloon low = balloon("Low");
         assertTrue(tallList.insert(high));
@@ -259,6 +262,19 @@ public class AirObjectSkipListTest extends TestCase {
 
 
     /**
+     * FixedRandom#nextBoolean should rely on the underlying integer sequence
+     * and continue repeating the final value once the provided inputs are
+     * exhausted.
+     */
+    public void testFixedRandomNextBooleanUsesSequence() {
+        FixedRandom rnd = new FixedRandom(1, 0);
+        assertFalse(rnd.nextBoolean());
+        assertTrue(rnd.nextBoolean());
+        assertTrue(rnd.nextBoolean());
+    }
+
+
+    /**
      * Removing the highest level node should allow the skip list to shrink its
      * current level back to zero.
      */
@@ -280,7 +296,8 @@ public class AirObjectSkipListTest extends TestCase {
      * strict agreement for size, ordering, and search/remove semantics.
      */
     public void testRandomizedOperationsMatchModel() {
-        AirObjectSkipList randomList = new AirObjectSkipList(new Random(0xCAFE));
+        AirObjectSkipList randomList = new AirObjectSkipList(new Random(
+            0xCAFE));
         TreeMap<String, Balloon> model = new TreeMap<>();
         Random ops = new Random(0xBEEF);
 
@@ -354,4 +371,3 @@ public class AirObjectSkipListTest extends TestCase {
         return builder.toString();
     }
 }
-

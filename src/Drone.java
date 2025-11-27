@@ -1,5 +1,8 @@
 /**
  * Drone object.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class Drone extends AirObject {
     private final String brand;
@@ -27,8 +30,16 @@ public class Drone extends AirObject {
      * @param engineCount
      *            number of engines
      */
-    public Drone(String name, int x, int y, int z, int xWidth, int yWidth,
-        int zWidth, String droneBrand, int engineCount) {
+    public Drone(
+        String name,
+        int x,
+        int y,
+        int z,
+        int xWidth,
+        int yWidth,
+        int zWidth,
+        String droneBrand,
+        int engineCount) {
         super(name, x, y, z, xWidth, yWidth, zWidth);
         brand = droneBrand;
         engines = engineCount;
@@ -56,4 +67,3 @@ public class Drone extends AirObject {
         return "Drone";
     }
 }
-

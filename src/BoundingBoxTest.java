@@ -2,6 +2,9 @@ import student.TestCase;
 
 /**
  * Focused tests for {@link BoundingBox}.
+ *
+ * @author Matthew Ozoroski (omatthew-tech)
+ * @version 2025-11-26
  */
 public class BoundingBoxTest extends TestCase {
     private BoundingBox box;
@@ -100,8 +103,7 @@ public class BoundingBoxTest extends TestCase {
      */
     public void testContainsPointBoundaryBehavior() {
         assertTrue(box.containsPoint(box.getX(), box.getY(), box.getZ()));
-        assertFalse(box.containsPoint(box.getX() + box.getXWidth(),
-            box.getY(), box.getZ()));
+        assertFalse(box.containsPoint(box.getX() + box.getXWidth(), box.getY(),
+            box.getZ()));
     }
 }
-
